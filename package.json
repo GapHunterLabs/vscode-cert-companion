@@ -2,7 +2,7 @@
   "name": "cert-companion",
   "displayName": "Cert Companion",
   "description": "Decode X.509 certificates (PEM/CRT/CER/DER) -- subject, issuer, validity, fingerprint -- no data leaves your editor.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "GapHunterLabs",
   "icon": "images/icon.png",
   "license": "Apache-2.0",
