@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { decodePemBundle, decodeDer, formatSummary, CertDecodeError } from './certDecode';
+import { recordHit } from './reviewPrompt';
 
 const DER_EXTENSIONS = new Set(['.der', '.cer']);
 const KEYSTORE_EXTENSIONS = new Set(['.jks', '.p12', '.pfx']);
@@ -13,7 +14,7 @@ function output(): vscode.OutputChannel {
   return outputChannel;
 }
 
-async function decodeActiveFile(): Promise<void> {
+async function decodeActiveFile(context: vscode.ExtensionContext): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   const uri = editor?.document.uri ?? (await pickFile());
   if (!uri) {
@@ -57,6 +58,7 @@ async function decodeActiveFile(): Promise<void> {
       });
     }
     channel.show(true);
+    recordHit(context);
   } catch (error) {
     const message = error instanceof CertDecodeError ? error.message : String(error);
     void vscode.window.showErrorMessage(`Cert Companion: ${message}`);
@@ -81,7 +83,7 @@ async function pickFile(): Promise<vscode.Uri | undefined> {
 
 export function activate(context: vscode.ExtensionContext): void {
   const command = vscode.commands.registerCommand('certCompanion.decodeActiveFile', () => {
-    void decodeActiveFile();
+    void decodeActiveFile(context);
   });
   context.subscriptions.push(command);
 }
